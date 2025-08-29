@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase Intent Annotation Study</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #4472C4;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .instructions {
+            background-color: #E7F3FF;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4472C4;
+            border-radius: 4px;
+        }
+        .spreadsheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .spreadsheet-table th {
+            background-color: #4472C4;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            width: 10%;
+        }
+        .spreadsheet-table th.utterance-header {
+            background-color: #4472C4;
+            text-align: left;
+            width: 50%;
+        }
+        .spreadsheet-table td {
+            padding: 10px 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+            width: 10%;
+        }
+        .spreadsheet-table td.utterance-cell {
+            text-align: left;
+            background-color: #f8f9fa;
+            font-style: italic;
+            padding: 12px;
+        }
+        .spreadsheet-table tr:nth-child(even) td.utterance-cell {
+            background-color: #e9ecef;
+        }
+        input[type="radio"] {
+            transform: scale(1.2);
+        }
+        .scale-labels {
+            font-size: 11px;
+            color: white;
+        }
+        .submit-container {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+        .submit-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .completion-section {
+            display: none;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .completion-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #155724;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 2px solid #28a745;
+            border-radius: 4px;
+        }
+        .error-message {
+            color: #721c24;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #28a745;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Purchase Intent Annotation Task
+        </div>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p><strong>Imagine you work as a marketing researcher, and your goal is to assess the purchase intent associated with a person's interaction with their AI assistant. The user's interaction is characterized by a single utterance in the interaction.</strong></p>
+            <p><strong>For each utterance, provide a score on a scale of 1 to 5, where 5 represents the highest level of purchase intent associated with the utterance and 1 represents the lowest level of purchase intent associated with the utterance. There's NO NEED for you to provide an explanation for the score you assign.</strong></p>
+            <p><em>Select one radio button for each utterance. All utterances must be rated to complete the task.</em></p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Progress: 0 of 0 completed</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="annotationForm">
+            <table class="spreadsheet-table">
+                <thead>
+                    <tr>
+                        <th class="utterance-header">Customer Utterances</th>
+                        <th>1<br><span class="scale-labels">extremely uninterested in purchase</span></th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5<br><span class="scale-labels">extremely interested in purchase</span></th>
+                    </tr>
+                </thead>
+                <tbody id="utteranceTableBody">
+                    <!-- Utterances will be loaded dynamically -->
+                </tbody>
+            </table>
+
+            <div class="submit-container">
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Annotations</button>
+                <p style="margin-top: 10px; color: #666; font-size: 12px;">
+                    Please ensure all utterances are rated before submitting.
+                </p>
+            </div>
+        </form>
+
+        <div class="completion-section" id="completionSection">
+            <h2>Study Completed Successfully!</h2>
+            <p>Thank you for your participation. Please copy the completion code below and return to Prolific:</p>
+            <div class="completion-code" id="completionCode"></div>
+            <p><strong>Important:</strong> Please copy this code and paste it in Prolific to receive payment.</p>
+        </div>
+    </div>
+
+    <script>
+        // REPLACE THIS SECTION WITH YOUR UTTERANCE_DATA.JS CONTENT
+        // Copy the entire contents of your utterance_data.js file here
+        const utteranceData = {
+            1: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "repeat the next song",
+                "i want the date of last monday of this month",
+                "what date is it today",
+                "please put mary is birthday party on the twenty second at seven p. m.",
+                "please tell me the latest news about politics",
+                "look for song two and play it",
+                "create a blank list",
+                "where is my list",
+                "remind me about next meeting in advance",
+                "please delete this list for me",
+                "how do i make a turkey",
+                "go to sirius and play the hip hop channel",
+                "play the weekend",
+                "olly turn the light off in the living room",
+                "play music radio for me",
+                "what is the answer to the universe",
+                "turn the sound up",
+                "wake me at seven am",
+                "what is the time in london",
+                "please play the local latin music channel on the radio",
+                "what day of the month is next tuesday",
+                "save this song in my great songs category",
+                "set up a notification about tomorrow is meeting at ten",
+                "how long will it take to drive to long beach",
+                "what events are this week",
+                "will it be too cold for a dress on sunday",
+                "can you continue audiobook the circle",
+                "find a description about a samsung t. v.",
+                "can you tell me about the alarm called bed",
+                "is the restaurant having delivery facility",
+            ],
+            2: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "what is the dollar exchange rate",
+                "add all rrcg events in march to my calendar",
+                "show all the received emails recently with time stamp",
+                "is there any new information regarding the mexican american border wall",
+                "where is the largest volcano in the world",
+                "i would like to hear some good funny jokes",
+                "tell me the news in technology from engadget",
+                "go back to animal farm",
+                "send a remind email",
+                "send this message to the family group",
+                "what is going on today in biloxi",
+                "is mount everest the tallest mountain in the united states",
+                "set event on recurring",
+                "is it currently raining in new york city",
+                "tweet bad service related to out local haskell mcdonalds",
+                "with all of the information you can gather on the internet could you please provide me with the best probable explanation of who killed president kennedy",
+                "tell me the time in jakarta",
+                "show me the places where i was",
+                "olly how is the weather",
+                "go silent for a day",
+                "please add my birthday",
+                "add event to calendar and repeat",
+                "tweet my current location",
+                "please tell me news related to the stock market",
+                "please make me a cappuccino",
+                "find a ride to the bar",
+                "should i wear winter boots when i go to the store",
+                "please start me some coffee",
+                "what is the cheapest marathon to enter within fifty miles of here",
+                "check the dish price and all",
+            ],
+            3: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "i will not be getting an oil change for my car today",
+                "play radio disney",
+                "i need to delete the alarm for church on sundays at eleven am",
+                "can you turn off my bedroom lamp",
+                "send a tweet to the local wawa that their service is terrible at their market street location",
+                "add an event to my google calendar for the date march twenty second please",
+                "how tall is tom cruise",
+                "put the last song on repeat",
+                "play madonnas like a virgin",
+                "i need to let my small group know the location has changed",
+                "delete my workout from today",
+                "i need directions to madison street",
+                "what were the cities affected by the earthquake",
+                "play boogie in your butt by eddie murphy",
+                "transform into a woman",
+                "lets play",
+                "convert the american dollar to the euro",
+                "how much time do i have to boil an egg",
+                "what is the song name",
+                "i want to listen to classic rock",
+                "what genre is this song currently playing",
+                "play the next episode",
+                "which time zone are we in please change to current",
+                "i want to listen to treasure island by robert louis stevenson",
+                "give me the newest new york times",
+                "play chess app",
+                "call peking garden",
+                "play new albums",
+                "run coffee maker",
+                "send flowers to my girl friend",
+            ],
+            4: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "fast road to get home",
+                "what hour of the day is it in dallas",
+                "is there any event today in my calendar",
+                "please tweet the following to radisson hotels customer service",
+                "what is the exchange rate for pounds and u. s. d.",
+                "what is the traffic this morning",
+                "please make a coffee for me",
+                "can you tell me how gravity works",
+                "will i need an umbrella for today",
+                "where is laos located",
+                "remove my appointment with my doctor on saturday please",
+                "remove tomorrow is alarm",
+                "increase volume by one",
+                "will it rain this week",
+                "tell me what time it is right now",
+                "turn the news on",
+                "what causes osteoperosis",
+                "turn off the socket",
+                "tell me about celebrity",
+                "start play spider",
+                "respond to email",
+                "i want the light switched off can you do it for me",
+                "please make the room brighter",
+                "turn lights blue",
+                "what does a geranium look like",
+                "checkout today alarm of meeting",
+                "instructions to make a meal",
+                "tell me all local events",
+                "have the vacuum cleaner clean the room",
+                "find my thai takeaways around grassmarket",
+            ],
+            5: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "tell me the traffic condition from here to home",
+                "please start new list",
+                "do i have new emails",
+                "check my inbox",
+                "what are the list of events in my calendar in march",
+                "play taylor swift music",
+                "what is today is weather forecast",
+                "give me all my lists",
+                "what is so clean news for the last six hours",
+                "send twitter to mattel that they need to stop making toys in china",
+                "can you add my business meeting to the work calendar",
+                "set brightness to fifty percent",
+                "did marckel replied to me on mail",
+                "let is play space invaders together",
+                "how about you save this music",
+                "can you please turn off the lights in this room",
+                "do you think today will be nice out",
+                "define inflation and describe it is effects on an economy",
+                "olly how would you describe a ball",
+                "tell me what is happening next thursday",
+                "set my alarm for eight am",
+                "show me new york times news",
+                "play kiss f. m. for me",
+                "please make arrangements to make the hall so brighter",
+                "what events are going on in new york city",
+                "it must be taste",
+                "can you tell me about animal kingdom in amazon forest",
+                "tell me the soup of the day at panera bread restaurant",
+                "i cup of joe would be nice right now",
+                "where should i take my wife for dinner tonight",
+            ],
+            6: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "take me to the most popular radio channel",
+                "do i have any new emails",
+                "tell me the date",
+                "before this event set notification",
+                "once a new topic on politics comes up alert me",
+                "can i check my lists",
+                "send email to jessica",
+                "do i have any new emails on my inbox",
+                "what lists do i have",
+                "remind me clock that i have a event",
+                "could you please email john saying i am on leave",
+                "can you tell me more about my most played music",
+                "tell me about any pending reminder",
+                "turn off my smart plug socket",
+                "add note that my day is going well",
+                "turn off the closet light",
+                "olly find the nearest uber",
+                "google do i have any appointments on my calendar for friday",
+                "cancel all events for today and mark me busy",
+                "follow news about hilary email issue in future",
+                "is the weather going to be nice this weekend",
+                "did you have a good day",
+                "play my dance music playlist",
+                "anything good happening this weekend in the area",
+                "erase the chore list",
+                "what is on my shopping list",
+                "how do you cook a good burger",
+                "what is planned for today in my local area",
+                "please show me best run program in jodhpur",
+                "add milk to my shopping list",
+            ],
+            7: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "hi please send mail to sam by evening",
+                "olly create an event in my calendar",
+                "slow rock it is ok",
+                "send a birthday email to my boss",
+                "add to my calendar mom is fashion dinner for may fifth",
+                "are there any emails i have not read yet",
+                "should i take my raincoat with me now",
+                "will i need to wear a jacket next wednesday",
+                "start playing dubstep",
+                "in jaipur traffic level is high",
+                "what is the definition of god",
+                "set this date to repeat reminder",
+                "i want to listen to radio four",
+                "if it is twelve hours ahead of eastern standard centaur time what is the time in the philippines now",
+                "complain to amazon customer service for me",
+                "it is too bright in here dim the lights",
+                "dim the lights",
+                "can i know what i have to do the next saturday at six p. m.",
+                "alert me when the outside temperature reaches sixty eight degrees",
+                "turn on the wemo plug socket to connect my charger to it",
+                "yo what is the current time",
+                "what is the time",
+                "do i have anything going on tonight",
+                "continue pride and prejudice",
+                "play super mario brothers game with me",
+                "keep me informed about bitcoin price",
+                "show me future events",
+                "find me a zoo or animal park in chicago that open this weekend",
+                "olly does shibaru sushi deliver",
+                "book me a taxi to the mall of america please",
+            ],
+            8: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "let me know new emails from john",
+                "what is the weather like today",
+                "what is the meeting schedule",
+                "what the highest likes on facebook",
+                "play firework by katy perry",
+                "go backward thirty seconds",
+                "remind me for tomorrow interview",
+                "make a note to pay the electricity bill and remind me on saturday at nine am",
+                "play my favorite pandora station",
+                "is there any news olly",
+                "start dune from where i left off",
+                "turn off the living room light",
+                "switch off bedroom light",
+                "what is currently trending on twitter",
+                "can you give me the newest phone number for bobby mcgee",
+                "please select the first song in my itunes library",
+                "who is singing this song",
+                "delete all events and content from my calendar",
+                "what is the weather at home",
+                "what is the weather in los angeles",
+                "tweet to ikea costumer service the following i am not happy with this new klm product",
+                "tweet my complaint and mention this costumer service",
+                "where is the train station",
+                "start my robot vacuum cleaner by ten to eleven am daily",
+                "when is the next train to glasgow from aberdeen",
+                "are there morning shows available",
+                "i would like it to be able to tell if something is starting to burn and turn off the oven stove or microwave",
+                "read the ticket for tesla",
+                "recommend a blue grass band event within twenty miles of manchester ma this week",
+                "order me some chinese food",
+            ],
+            9: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "remove item from list",
+                "tell me what is happening on social media",
+                "i want to thank everyone for the birthday wishes",
+                "in how many hours will it be midnight in london england",
+                "what is the minimum temperature of london",
+                "get me the most recent news",
+                "is kim kardashian married",
+                "what emails have i gotten since last night",
+                "olly what is the song",
+                "give the definition of motivation",
+                "i do not want eggs",
+                "submit a negative review about a company",
+                "i need to calendar a meeting with nathan on monday at nine am",
+                "what does the word labyrinth mean",
+                "tell me the current time in ottawa",
+                "it is too dark in here increase the brightness of the lights",
+                "play my most watched podcast",
+                "bring up google calendar please add event for may fifth",
+                "give me a reminder twenty four hours before my friday meeting with edg",
+                "my day was extremely hard",
+                "hey olly what is the time",
+                "i want to hear the news on tmz",
+                "do i have repair work today",
+                "how much is the us dollar versus the pound",
+                "when is the next train to new york",
+                "can the lights be changed to green",
+                "how many hours distance is between my location and new york",
+                "describe the heart stone card game",
+                "when will my chinese food arrive",
+                "olly place an order for a combo platter from china buffet please",
+            ],
+            10: [
+                "Order two hamburgers for me",
+                "Play next segment",
+                "Order two cheeseburgers from wings n. ale on university drive",
+                "How old is hugh jackman",
+                "how many oscars has won meryl streep",
+                "is there any alarm active",
+                "my facebook update in every three hour should be available",
+                "please set alarm for",
+                "what is the time in dubai",
+                "what is the forecast",
+                "add my doctor appointment for the fifteenth",
+                "where is india located",
+                "lets have a break for five minutes",
+                "do i need to wear a heavy coat today",
+                "please remind this sunday to go to mass",
+                "i want to see each of my pending reminders",
+                "define computer",
+                "wipe everything on my calendar",
+                "i want to hear the radio",
+                "how many hours remaining to reach midnight in city",
+                "send an email to rae telling her my phone is back in service",
+                "email tom the date and time of tomorrow is meeting",
+                "play party songs",
+                "check mail with subject",
+                "list the twenty most repeated songs",
+                "how much traffic does atlanta georgia usually have",
+                "can you suggest a good drama for me to watch",
+                "i want an alarm for three today",
+                "decrease twenty percent",
+                "give me a newspaper",
+                "find places to eat near my home",
+                "what restaurants around here have good reviews",
+                "i want you to analyze the pattern for me to buy lottery ticket which number will get the first prize",
+                "order one pizza from pizza hut",
+            ],
+            // Continue for all 10 subsets...
+        };
+        
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const prolificPid = urlParams.get('PROLIFIC_PID') || 'TEST_USER';
+        const studyId = urlParams.get('STUDY_ID') || 'TEST_STUDY';
+        const sessionId = urlParams.get('SESSION_ID') || 'TEST_SESSION';
+        
+        // Function to assign subset based on participant ID
+        function assignSubset(prolificPid) {
+            // Use participant ID for consistent assignment
+            const hash = prolificPid.split('').reduce((a, b) => {
+                a = ((a << 5) - a) + b.charCodeAt(0);
+                return a & a;
+            }, 0);
+            return Math.abs(hash % 10) + 1; // For 10 subsets (change to % 1000 for main study)
+        }
+        
+        // Determine subset using dynamic assignment
+        const subsetId = assignSubset(prolificPid);
+        
+        let currentUtterances = [];
+        let totalUtterances = 0;
+
+        // Load utterances for the assigned subset
+        function loadUtterances() {
+            currentUtterances = utteranceData[subsetId] || utteranceData[1];
+            totalUtterances = currentUtterances.length;
+            
+            const tbody = document.getElementById('utteranceTableBody');
+            tbody.innerHTML = '';
+            
+            currentUtterances.forEach((utterance, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="utterance-cell">${utterance}</td>
+                    <td><input type="radio" name="utterance${index + 1}" value="1" required></td>
+                    <td><input type="radio" name="utterance${index + 1}" value="2"></td>
+                    <td><input type="radio" name="utterance${index + 1}" value="3"></td>
+                    <td><input type="radio" name="utterance${index + 1}" value="4"></td>
+                    <td><input type="radio" name="utterance${index + 1}" value="5"></td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            updateProgress();
+            
+            // Add change listeners for progress tracking
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', updateProgress);
+            });
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            let completed = 0;
+            for(let i = 1; i <= totalUtterances; i++) {
+                if(document.querySelector(`input[name="utterance${i}"]:checked`)) {
+                    completed++;
+                }
+            }
+            
+            const percentage = totalUtterances > 0 ? (completed / totalUtterances) * 100 : 0;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `Progress: ${completed} of ${totalUtterances} completed`;
+        }
+
+        // Form submission
+        document.getElementById('annotationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const errorDiv = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Validate all utterances are rated
+            let completed = 0;
+            for(let i = 1; i <= totalUtterances; i++) {
+                if(document.querySelector(`input[name="utterance${i}"]:checked`)) {
+                    completed++;
+                }
+            }
+            
+            if(completed < totalUtterances) {
+                errorDiv.textContent = `Please rate all utterances. You have completed ${completed} out of ${totalUtterances}.`;
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            errorDiv.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            // Collect all responses
+            const responses = {
+                prolific_pid: prolificPid,
+                study_id: studyId,
+                session_id: sessionId,
+                subset_id: subsetId,
+                timestamp: new Date().toISOString(),
+                total_utterances: totalUtterances
+            };
+            
+            for(let i = 1; i <= totalUtterances; i++) {
+                const selected = document.querySelector(`input[name="utterance${i}"]:checked`);
+                if(selected) {
+                    responses[`utterance${i}`] = selected.value;
+                    responses[`utterance${i}_text`] = currentUtterances[i-1];
+                }
+            }
+            
+            // Log the data (you'll need to implement actual data storage)
+            console.log('Study Response Data:', responses);
+            
+            // Generate completion code
+            const completionCode = 'PI' + prolificPid.slice(-6) + subsetId + Date.now().toString(36).slice(-4);
+            
+            // Show completion screen
+            setTimeout(() => {
+                document.getElementById('annotationForm').style.display = 'none';
+                document.getElementById('completionCode').textContent = completionCode;
+                document.getElementById('completionSection').style.display = 'block';
+                
+                // Scroll to completion section
+                document.getElementById('completionSection').scrollIntoView({behavior: 'smooth'});
+            }, 1000);
+        });
+
+        // Initialize the study when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUtterances();
+            
+            // Optional: Log study start
+            console.log('Study started:', {
+                prolific_pid: prolificPid,
+                study_id: studyId,
+                session_id: sessionId,
+                subset_id: subsetId,
+                timestamp: new Date().toISOString()
+            });
+        });
+    </script>
+</body>
+</html>
