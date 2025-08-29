@@ -198,8 +198,20 @@
     </div>
 
     <script>
-        // REPLACE THIS SECTION WITH YOUR UTTERANCE_DATA.JS CONTENT
-        // Copy the entire contents of your utterance_data.js file here
+        // Google Apps Script URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz5MtKWIrpV2Ka50gx1x5EEI14D_dKVCqQZneyZ3Ze6LV1KR10AO6El5iAvczoMWpg/exec';
+        
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const prolificPid = urlParams.get('PROLIFIC_PID') || 'TEST_USER';
+        const studyId = urlParams.get('STUDY_ID') || 'TEST_STUDY';
+        const sessionId = urlParams.get('SESSION_ID') || 'TEST_SESSION';
+        
+        let currentUtterances = [];
+        let totalUtterances = 0;
+        let assignedSubsetId = null;
+
+        // Your utterance data
         const utteranceData = {
             1: [
                 "Order two hamburgers for me",
@@ -273,322 +285,75 @@
                 "what is the cheapest marathon to enter within fifty miles of here",
                 "check the dish price and all",
             ],
-            3: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "i will not be getting an oil change for my car today",
-                "play radio disney",
-                "i need to delete the alarm for church on sundays at eleven am",
-                "can you turn off my bedroom lamp",
-                "send a tweet to the local wawa that their service is terrible at their market street location",
-                "add an event to my google calendar for the date march twenty second please",
-                "how tall is tom cruise",
-                "put the last song on repeat",
-                "play madonnas like a virgin",
-                "i need to let my small group know the location has changed",
-                "delete my workout from today",
-                "i need directions to madison street",
-                "what were the cities affected by the earthquake",
-                "play boogie in your butt by eddie murphy",
-                "transform into a woman",
-                "lets play",
-                "convert the american dollar to the euro",
-                "how much time do i have to boil an egg",
-                "what is the song name",
-                "i want to listen to classic rock",
-                "what genre is this song currently playing",
-                "play the next episode",
-                "which time zone are we in please change to current",
-                "i want to listen to treasure island by robert louis stevenson",
-                "give me the newest new york times",
-                "play chess app",
-                "call peking garden",
-                "play new albums",
-                "run coffee maker",
-                "send flowers to my girl friend",
-            ],
-            4: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "fast road to get home",
-                "what hour of the day is it in dallas",
-                "is there any event today in my calendar",
-                "please tweet the following to radisson hotels customer service",
-                "what is the exchange rate for pounds and u. s. d.",
-                "what is the traffic this morning",
-                "please make a coffee for me",
-                "can you tell me how gravity works",
-                "will i need an umbrella for today",
-                "where is laos located",
-                "remove my appointment with my doctor on saturday please",
-                "remove tomorrow is alarm",
-                "increase volume by one",
-                "will it rain this week",
-                "tell me what time it is right now",
-                "turn the news on",
-                "what causes osteoperosis",
-                "turn off the socket",
-                "tell me about celebrity",
-                "start play spider",
-                "respond to email",
-                "i want the light switched off can you do it for me",
-                "please make the room brighter",
-                "turn lights blue",
-                "what does a geranium look like",
-                "checkout today alarm of meeting",
-                "instructions to make a meal",
-                "tell me all local events",
-                "have the vacuum cleaner clean the room",
-                "find my thai takeaways around grassmarket",
-            ],
-            5: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "tell me the traffic condition from here to home",
-                "please start new list",
-                "do i have new emails",
-                "check my inbox",
-                "what are the list of events in my calendar in march",
-                "play taylor swift music",
-                "what is today is weather forecast",
-                "give me all my lists",
-                "what is so clean news for the last six hours",
-                "send twitter to mattel that they need to stop making toys in china",
-                "can you add my business meeting to the work calendar",
-                "set brightness to fifty percent",
-                "did marckel replied to me on mail",
-                "let is play space invaders together",
-                "how about you save this music",
-                "can you please turn off the lights in this room",
-                "do you think today will be nice out",
-                "define inflation and describe it is effects on an economy",
-                "olly how would you describe a ball",
-                "tell me what is happening next thursday",
-                "set my alarm for eight am",
-                "show me new york times news",
-                "play kiss f. m. for me",
-                "please make arrangements to make the hall so brighter",
-                "what events are going on in new york city",
-                "it must be taste",
-                "can you tell me about animal kingdom in amazon forest",
-                "tell me the soup of the day at panera bread restaurant",
-                "i cup of joe would be nice right now",
-                "where should i take my wife for dinner tonight",
-            ],
-            6: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "take me to the most popular radio channel",
-                "do i have any new emails",
-                "tell me the date",
-                "before this event set notification",
-                "once a new topic on politics comes up alert me",
-                "can i check my lists",
-                "send email to jessica",
-                "do i have any new emails on my inbox",
-                "what lists do i have",
-                "remind me clock that i have a event",
-                "could you please email john saying i am on leave",
-                "can you tell me more about my most played music",
-                "tell me about any pending reminder",
-                "turn off my smart plug socket",
-                "add note that my day is going well",
-                "turn off the closet light",
-                "olly find the nearest uber",
-                "google do i have any appointments on my calendar for friday",
-                "cancel all events for today and mark me busy",
-                "follow news about hilary email issue in future",
-                "is the weather going to be nice this weekend",
-                "did you have a good day",
-                "play my dance music playlist",
-                "anything good happening this weekend in the area",
-                "erase the chore list",
-                "what is on my shopping list",
-                "how do you cook a good burger",
-                "what is planned for today in my local area",
-                "please show me best run program in jodhpur",
-                "add milk to my shopping list",
-            ],
-            7: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "hi please send mail to sam by evening",
-                "olly create an event in my calendar",
-                "slow rock it is ok",
-                "send a birthday email to my boss",
-                "add to my calendar mom is fashion dinner for may fifth",
-                "are there any emails i have not read yet",
-                "should i take my raincoat with me now",
-                "will i need to wear a jacket next wednesday",
-                "start playing dubstep",
-                "in jaipur traffic level is high",
-                "what is the definition of god",
-                "set this date to repeat reminder",
-                "i want to listen to radio four",
-                "if it is twelve hours ahead of eastern standard centaur time what is the time in the philippines now",
-                "complain to amazon customer service for me",
-                "it is too bright in here dim the lights",
-                "dim the lights",
-                "can i know what i have to do the next saturday at six p. m.",
-                "alert me when the outside temperature reaches sixty eight degrees",
-                "turn on the wemo plug socket to connect my charger to it",
-                "yo what is the current time",
-                "what is the time",
-                "do i have anything going on tonight",
-                "continue pride and prejudice",
-                "play super mario brothers game with me",
-                "keep me informed about bitcoin price",
-                "show me future events",
-                "find me a zoo or animal park in chicago that open this weekend",
-                "olly does shibaru sushi deliver",
-                "book me a taxi to the mall of america please",
-            ],
-            8: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "let me know new emails from john",
-                "what is the weather like today",
-                "what is the meeting schedule",
-                "what the highest likes on facebook",
-                "play firework by katy perry",
-                "go backward thirty seconds",
-                "remind me for tomorrow interview",
-                "make a note to pay the electricity bill and remind me on saturday at nine am",
-                "play my favorite pandora station",
-                "is there any news olly",
-                "start dune from where i left off",
-                "turn off the living room light",
-                "switch off bedroom light",
-                "what is currently trending on twitter",
-                "can you give me the newest phone number for bobby mcgee",
-                "please select the first song in my itunes library",
-                "who is singing this song",
-                "delete all events and content from my calendar",
-                "what is the weather at home",
-                "what is the weather in los angeles",
-                "tweet to ikea costumer service the following i am not happy with this new klm product",
-                "tweet my complaint and mention this costumer service",
-                "where is the train station",
-                "start my robot vacuum cleaner by ten to eleven am daily",
-                "when is the next train to glasgow from aberdeen",
-                "are there morning shows available",
-                "i would like it to be able to tell if something is starting to burn and turn off the oven stove or microwave",
-                "read the ticket for tesla",
-                "recommend a blue grass band event within twenty miles of manchester ma this week",
-                "order me some chinese food",
-            ],
-            9: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "remove item from list",
-                "tell me what is happening on social media",
-                "i want to thank everyone for the birthday wishes",
-                "in how many hours will it be midnight in london england",
-                "what is the minimum temperature of london",
-                "get me the most recent news",
-                "is kim kardashian married",
-                "what emails have i gotten since last night",
-                "olly what is the song",
-                "give the definition of motivation",
-                "i do not want eggs",
-                "submit a negative review about a company",
-                "i need to calendar a meeting with nathan on monday at nine am",
-                "what does the word labyrinth mean",
-                "tell me the current time in ottawa",
-                "it is too dark in here increase the brightness of the lights",
-                "play my most watched podcast",
-                "bring up google calendar please add event for may fifth",
-                "give me a reminder twenty four hours before my friday meeting with edg",
-                "my day was extremely hard",
-                "hey olly what is the time",
-                "i want to hear the news on tmz",
-                "do i have repair work today",
-                "how much is the us dollar versus the pound",
-                "when is the next train to new york",
-                "can the lights be changed to green",
-                "how many hours distance is between my location and new york",
-                "describe the heart stone card game",
-                "when will my chinese food arrive",
-                "olly place an order for a combo platter from china buffet please",
-            ],
-            10: [
-                "Order two hamburgers for me",
-                "Play next segment",
-                "Order two cheeseburgers from wings n. ale on university drive",
-                "How old is hugh jackman",
-                "how many oscars has won meryl streep",
-                "is there any alarm active",
-                "my facebook update in every three hour should be available",
-                "please set alarm for",
-                "what is the time in dubai",
-                "what is the forecast",
-                "add my doctor appointment for the fifteenth",
-                "where is india located",
-                "lets have a break for five minutes",
-                "do i need to wear a heavy coat today",
-                "please remind this sunday to go to mass",
-                "i want to see each of my pending reminders",
-                "define computer",
-                "wipe everything on my calendar",
-                "i want to hear the radio",
-                "how many hours remaining to reach midnight in city",
-                "send an email to rae telling her my phone is back in service",
-                "email tom the date and time of tomorrow is meeting",
-                "play party songs",
-                "check mail with subject",
-                "list the twenty most repeated songs",
-                "how much traffic does atlanta georgia usually have",
-                "can you suggest a good drama for me to watch",
-                "i want an alarm for three today",
-                "decrease twenty percent",
-                "give me a newspaper",
-                "find places to eat near my home",
-                "what restaurants around here have good reviews",
-                "i want you to analyze the pattern for me to buy lottery ticket which number will get the first prize",
-                "order one pizza from pizza hut",
-            ],
-            // Continue for all 10 subsets...
+            // Add remaining subsets 3-10...
+            3: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "i will not be getting an oil change for my car today", "play radio disney", "i need to delete the alarm for church on sundays at eleven am", "can you turn off my bedroom lamp", "send a tweet to the local wawa that their service is terrible at their market street location", "add an event to my google calendar for the date march twenty second please", "how tall is tom cruise", "put the last song on repeat", "play madonnas like a virgin", "i need to let my small group know the location has changed", "delete my workout from today", "i need directions to madison street", "what were the cities affected by the earthquake", "play boogie in your butt by eddie murphy", "transform into a woman", "lets play", "convert the american dollar to the euro", "how much time do i have to boil an egg", "what is the song name", "i want to listen to classic rock", "what genre is this song currently playing", "play the next episode", "which time zone are we in please change to current", "i want to listen to treasure island by robert louis stevenson", "give me the newest new york times", "play chess app", "call peking garden", "play new albums", "run coffee maker", "send flowers to my girl friend"],
+            4: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "fast road to get home", "what hour of the day is it in dallas", "is there any event today in my calendar", "please tweet the following to radisson hotels customer service", "what is the exchange rate for pounds and u. s. d.", "what is the traffic this morning", "please make a coffee for me", "can you tell me how gravity works", "will i need an umbrella for today", "where is laos located", "remove my appointment with my doctor on saturday please", "remove tomorrow is alarm", "increase volume by one", "will it rain this week", "tell me what time it is right now", "turn the news on", "what causes osteoperosis", "turn off the socket", "tell me about celebrity", "start play spider", "respond to email", "i want the light switched off can you do it for me", "please make the room brighter", "turn lights blue", "what does a geranium look like", "checkout today alarm of meeting", "instructions to make a meal", "tell me all local events", "have the vacuum cleaner clean the room", "find my thai takeaways around grassmarket"],
+            5: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "tell me the traffic condition from here to home", "please start new list", "do i have new emails", "check my inbox", "what are the list of events in my calendar in march", "play taylor swift music", "what is today is weather forecast", "give me all my lists", "what is so clean news for the last six hours", "send twitter to mattel that they need to stop making toys in china", "can you add my business meeting to the work calendar", "set brightness to fifty percent", "did marckel replied to me on mail", "let is play space invaders together", "how about you save this music", "can you please turn off the lights in this room", "do you think today will be nice out", "define inflation and describe it is effects on an economy", "olly how would you describe a ball", "tell me what is happening next thursday", "set my alarm for eight am", "show me new york times news", "play kiss f. m. for me", "please make arrangements to make the hall so brighter", "what events are going on in new york city", "it must be taste", "can you tell me about animal kingdom in amazon forest", "tell me the soup of the day at panera bread restaurant", "i cup of joe would be nice right now", "where should i take my wife for dinner tonight"],
+            6: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "take me to the most popular radio channel", "do i have any new emails", "tell me the date", "before this event set notification", "once a new topic on politics comes up alert me", "can i check my lists", "send email to jessica", "do i have any new emails on my inbox", "what lists do i have", "remind me clock that i have a event", "could you please email john saying i am on leave", "can you tell me more about my most played music", "tell me about any pending reminder", "turn off my smart plug socket", "add note that my day is going well", "turn off the closet light", "olly find the nearest uber", "google do i have any appointments on my calendar for friday", "cancel all events for today and mark me busy", "follow news about hilary email issue in future", "is the weather going to be nice this weekend", "did you have a good day", "play my dance music playlist", "anything good happening this weekend in the area", "erase the chore list", "what is on my shopping list", "how do you cook a good burger", "what is planned for today in my local area", "please show me best run program in jodhpur", "add milk to my shopping list"],
+            7: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "hi please send mail to sam by evening", "olly create an event in my calendar", "slow rock it is ok", "send a birthday email to my boss", "add to my calendar mom is fashion dinner for may fifth", "are there any emails i have not read yet", "should i take my raincoat with me now", "will i need to wear a jacket next wednesday", "start playing dubstep", "in jaipur traffic level is high", "what is the definition of god", "set this date to repeat reminder", "i want to listen to radio four", "if it is twelve hours ahead of eastern standard centaur time what is the time in the philippines now", "complain to amazon customer service for me", "it is too bright in here dim the lights", "dim the lights", "can i know what i have to do the next saturday at six p. m.", "alert me when the outside temperature reaches sixty eight degrees", "turn on the wemo plug socket to connect my charger to it", "yo what is the current time", "what is the time", "do i have anything going on tonight", "continue pride and prejudice", "play super mario brothers game with me", "keep me informed about bitcoin price", "show me future events", "find me a zoo or animal park in chicago that open this weekend", "olly does shibaru sushi deliver", "book me a taxi to the mall of america please"],
+            8: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "let me know new emails from john", "what is the weather like today", "what is the meeting schedule", "what the highest likes on facebook", "play firework by katy perry", "go backward thirty seconds", "remind me for tomorrow interview", "make a note to pay the electricity bill and remind me on saturday at nine am", "play my favorite pandora station", "is there any news olly", "start dune from where i left off", "turn off the living room light", "switch off bedroom light", "what is currently trending on twitter", "can you give me the newest phone number for bobby mcgee", "please select the first song in my itunes library", "who is singing this song", "delete all events and content from my calendar", "what is the weather at home", "what is the weather in los angeles", "tweet to ikea costumer service the following i am not happy with this new klm product", "tweet my complaint and mention this costumer service", "where is the train station", "start my robot vacuum cleaner by ten to eleven am daily", "when is the next train to glasgow from aberdeen", "are there morning shows available", "i would like it to be able to tell if something is starting to burn and turn off the oven stove or microwave", "read the ticket for tesla", "recommend a blue grass band event within twenty miles of manchester ma this week", "order me some chinese food"],
+            9: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "remove item from list", "tell me what is happening on social media", "i want to thank everyone for the birthday wishes", "in how many hours will it be midnight in london england", "what is the minimum temperature of london", "get me the most recent news", "is kim kardashian married", "what emails have i gotten since last night", "olly what is the song", "give the definition of motivation", "i do not want eggs", "submit a negative review about a company", "i need to calendar a meeting with nathan on monday at nine am", "what does the word labyrinth mean", "tell me the current time in ottawa", "it is too dark in here increase the brightness of the lights", "play my most watched podcast", "bring up google calendar please add event for may fifth", "give me a reminder twenty four hours before my friday meeting with edg", "my day was extremely hard", "hey olly what is the time", "i want to hear the news on tmz", "do i have repair work today", "how much is the us dollar versus the pound", "when is the next train to new york", "can the lights be changed to green", "how many hours distance is between my location and new york", "describe the heart stone card game", "when will my chinese food arrive", "olly place an order for a combo platter from china buffet please"],
+            10: ["Order two hamburgers for me", "Play next segment", "Order two cheeseburgers from wings n. ale on university drive", "How old is hugh jackman", "how many oscars has won meryl streep", "is there any alarm active", "my facebook update in every three hour should be available", "please set alarm for", "what is the time in dubai", "what is the forecast", "add my doctor appointment for the fifteenth", "where is india located", "lets have a break for five minutes", "do i need to wear a heavy coat today", "please remind this sunday to go to mass", "i want to see each of my pending reminders", "define computer", "wipe everything on my calendar", "i want to hear the radio", "how many hours remaining to reach midnight in city", "send an email to rae telling her my phone is back in service", "email tom the date and time of tomorrow is meeting", "play party songs", "check mail with subject", "list the twenty most repeated songs", "how much traffic does atlanta georgia usually have", "can you suggest a good drama for me to watch", "i want an alarm for three today", "decrease twenty percent", "give me a newspaper", "find places to eat near my home", "what restaurants around here have good reviews", "i want you to analyze the pattern for me to buy lottery ticket which number will get the first prize", "order one pizza from pizza hut"]
         };
-        
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const prolificPid = urlParams.get('PROLIFIC_PID') || 'TEST_USER';
-        const studyId = urlParams.get('STUDY_ID') || 'TEST_STUDY';
-        const sessionId = urlParams.get('SESSION_ID') || 'TEST_SESSION';
-        
-        // Function to assign subset based on participant ID
-        function assignSubset(prolificPid) {
-            // Use participant ID for consistent assignment
-            const hash = prolificPid.split('').reduce((a, b) => {
-                a = ((a << 5) - a) + b.charCodeAt(0);
-                return a & a;
-            }, 0);
-            return Math.abs(hash % 10) + 1; // For 10 subsets (change to % 1000 for main study)
+
+        // Get subset assignment from Google Sheets
+        async function getSubsetAssignment() {
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'getAssignment',
+                        prolific_pid: prolificPid
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Study is full. All subsets have been assigned.');
+                    return null;
+                }
+                
+                return data.subset_id;
+            } catch (error) {
+                console.error('Assignment error:', error);
+                alert('Error getting assignment. Please refresh and try again.');
+                return null;
+            }
         }
-        
-        // Determine subset using dynamic assignment
-        const subsetId = assignSubset(prolificPid);
-        
-        let currentUtterances = [];
-        let totalUtterances = 0;
+
+        // Submit responses to Google Sheets
+        async function submitToGoogleSheets(responses) {
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'submitResponses',
+                        prolific_pid: prolificPid,
+                        subset_id: assignedSubsetId,
+                        responses: responses
+                    })
+                });
+                
+                const data = await response.json();
+                return data.success;
+            } catch (error) {
+                console.error('Submission error:', error);
+                return false;
+            }
+        }
 
         // Load utterances for the assigned subset
-        function loadUtterances() {
-            currentUtterances = utteranceData[subsetId] || utteranceData[1];
+        async function loadUtterances() {
+            assignedSubsetId = await getSubsetAssignment();
+            
+            if (!assignedSubsetId) {
+                return;
+            }
+            
+            currentUtterances = utteranceData[assignedSubsetId] || utteranceData[1];
             totalUtterances = currentUtterances.length;
             
             const tbody = document.getElementById('utteranceTableBody');
@@ -609,7 +374,6 @@
             
             updateProgress();
             
-            // Add change listeners for progress tracking
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('change', updateProgress);
             });
@@ -630,13 +394,12 @@
         }
 
         // Form submission
-        document.getElementById('annotationForm').addEventListener('submit', function(e) {
+        document.getElementById('annotationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const errorDiv = document.getElementById('errorMessage');
             const submitBtn = document.getElementById('submitBtn');
             
-            // Validate all utterances are rated
             let completed = 0;
             for(let i = 1; i <= totalUtterances; i++) {
                 if(document.querySelector(`input[name="utterance${i}"]:checked`)) {
@@ -654,12 +417,11 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
             
-            // Collect all responses
             const responses = {
                 prolific_pid: prolificPid,
                 study_id: studyId,
                 session_id: sessionId,
-                subset_id: subsetId,
+                subset_id: assignedSubsetId,
                 timestamp: new Date().toISOString(),
                 total_utterances: totalUtterances
             };
@@ -672,19 +434,22 @@
                 }
             }
             
-            // Log the data (you'll need to implement actual data storage)
-            console.log('Study Response Data:', responses);
+            const success = await submitToGoogleSheets(responses);
             
-            // Generate completion code
-            const completionCode = 'PI' + prolificPid.slice(-6) + subsetId + Date.now().toString(36).slice(-4);
+            if (!success) {
+                errorDiv.textContent = 'Failed to submit responses. Please try again.';
+                errorDiv.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Annotations';
+                return;
+            }
             
-            // Show completion screen
+            const completionCode = 'PI' + prolificPid.slice(-6) + assignedSubsetId + Date.now().toString(36).slice(-4);
+            
             setTimeout(() => {
                 document.getElementById('annotationForm').style.display = 'none';
                 document.getElementById('completionCode').textContent = completionCode;
                 document.getElementById('completionSection').style.display = 'block';
-                
-                // Scroll to completion section
                 document.getElementById('completionSection').scrollIntoView({behavior: 'smooth'});
             }, 1000);
         });
@@ -692,15 +457,6 @@
         // Initialize the study when page loads
         document.addEventListener('DOMContentLoaded', function() {
             loadUtterances();
-            
-            // Optional: Log study start
-            console.log('Study started:', {
-                prolific_pid: prolificPid,
-                study_id: studyId,
-                session_id: sessionId,
-                subset_id: subsetId,
-                timestamp: new Date().toISOString()
-            });
         });
     </script>
 </body>
