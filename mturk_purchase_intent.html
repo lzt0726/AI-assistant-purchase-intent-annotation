@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase Intent Annotation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #4472C4;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .instructions {
+            background-color: #E7F3FF;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4472C4;
+            border-radius: 4px;
+        }
+        .spreadsheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .spreadsheet-table th {
+            background-color: #4472C4;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            width: 10%; /* Equal width for columns 1-5 */
+        }
+        .spreadsheet-table th.utterance-header {
+            background-color: #4472C4;
+            text-align: left;
+            width: 50%;
+        }
+        .spreadsheet-table td {
+            padding: 10px 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+            width: 10%; /* Equal width for rating columns */
+        }
+        .spreadsheet-table td.utterance-cell {
+            text-align: left;
+            background-color: #f8f9fa;
+            font-style: italic;
+            padding: 12px;
+        }
+        .spreadsheet-table tr:nth-child(even) td.utterance-cell {
+            background-color: #e9ecef;
+        }
+        input[type="radio"] {
+            transform: scale(1.2);
+        }
+        .scale-labels {
+            font-size: 11px;
+            color: white;
+        }
+        .submit-container {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Purchase Intent Annotation Task
+        </div>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p><strong>Imagine you work as a marketing researcher, and your goal is to assess the purchase intent associated with a person's interaction with their AI assistant. The user's interaction is characterized by a single utterance in the interaction.</strong></p>
+            <p><strong>For each utterance, provide a score on a scale of 1 to 5, where 5 represents the highest level of purchase intent associated with the utterance and 1 represents the lowest level of purchase intent associated with the utterance. There's NO NEED for you to provide an explanation for the score you assign.</strong></p>
+            <p><em>Select one radio button for each utterance. All utterances must be rated to complete the task.</em></p>
+        </div>
+
+        <form id="annotationForm">
+            <table class="spreadsheet-table">
+                <thead>
+                    <tr>
+                        <th class="utterance-header">Customer Utterances</th>
+                        <th>1<br><span class="scale-labels">extremely uninterested in purchase</span></th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5<br><span class="scale-labels">extremely interested in purchase</span></th>
+                    </tr>
+                </thead>
+                <tbody id="utteranceTableBody">
+                    <!-- All 31 utterance rows -->
+                    <tr style="display: ${utterance1 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance1}</td>
+                        <td><input type="radio" name="utterance1" value="1" required></td>
+                        <td><input type="radio" name="utterance1" value="2"></td>
+                        <td><input type="radio" name="utterance1" value="3"></td>
+                        <td><input type="radio" name="utterance1" value="4"></td>
+                        <td><input type="radio" name="utterance1" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance2 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance2}</td>
+                        <td><input type="radio" name="utterance2" value="1" required></td>
+                        <td><input type="radio" name="utterance2" value="2"></td>
+                        <td><input type="radio" name="utterance2" value="3"></td>
+                        <td><input type="radio" name="utterance2" value="4"></td>
+                        <td><input type="radio" name="utterance2" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance3 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance3}</td>
+                        <td><input type="radio" name="utterance3" value="1" required></td>
+                        <td><input type="radio" name="utterance3" value="2"></td>
+                        <td><input type="radio" name="utterance3" value="3"></td>
+                        <td><input type="radio" name="utterance3" value="4"></td>
+                        <td><input type="radio" name="utterance3" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance4 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance4}</td>
+                        <td><input type="radio" name="utterance4" value="1" required></td>
+                        <td><input type="radio" name="utterance4" value="2"></td>
+                        <td><input type="radio" name="utterance4" value="3"></td>
+                        <td><input type="radio" name="utterance4" value="4"></td>
+                        <td><input type="radio" name="utterance4" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance5 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance5}</td>
+                        <td><input type="radio" name="utterance5" value="1" required></td>
+                        <td><input type="radio" name="utterance5" value="2"></td>
+                        <td><input type="radio" name="utterance5" value="3"></td>
+                        <td><input type="radio" name="utterance5" value="4"></td>
+                        <td><input type="radio" name="utterance5" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance6 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance6}</td>
+                        <td><input type="radio" name="utterance6" value="1" required></td>
+                        <td><input type="radio" name="utterance6" value="2"></td>
+                        <td><input type="radio" name="utterance6" value="3"></td>
+                        <td><input type="radio" name="utterance6" value="4"></td>
+                        <td><input type="radio" name="utterance6" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance7 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance7}</td>
+                        <td><input type="radio" name="utterance7" value="1" required></td>
+                        <td><input type="radio" name="utterance7" value="2"></td>
+                        <td><input type="radio" name="utterance7" value="3"></td>
+                        <td><input type="radio" name="utterance7" value="4"></td>
+                        <td><input type="radio" name="utterance7" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance8 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance8}</td>
+                        <td><input type="radio" name="utterance8" value="1" required></td>
+                        <td><input type="radio" name="utterance8" value="2"></td>
+                        <td><input type="radio" name="utterance8" value="3"></td>
+                        <td><input type="radio" name="utterance8" value="4"></td>
+                        <td><input type="radio" name="utterance8" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance9 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance9}</td>
+                        <td><input type="radio" name="utterance9" value="1" required></td>
+                        <td><input type="radio" name="utterance9" value="2"></td>
+                        <td><input type="radio" name="utterance9" value="3"></td>
+                        <td><input type="radio" name="utterance9" value="4"></td>
+                        <td><input type="radio" name="utterance9" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance10 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance10}</td>
+                        <td><input type="radio" name="utterance10" value="1" required></td>
+                        <td><input type="radio" name="utterance10" value="2"></td>
+                        <td><input type="radio" name="utterance10" value="3"></td>
+                        <td><input type="radio" name="utterance10" value="4"></td>
+                        <td><input type="radio" name="utterance10" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance11 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance11}</td>
+                        <td><input type="radio" name="utterance11" value="1" required></td>
+                        <td><input type="radio" name="utterance11" value="2"></td>
+                        <td><input type="radio" name="utterance11" value="3"></td>
+                        <td><input type="radio" name="utterance11" value="4"></td>
+                        <td><input type="radio" name="utterance11" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance12 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance12}</td>
+                        <td><input type="radio" name="utterance12" value="1" required></td>
+                        <td><input type="radio" name="utterance12" value="2"></td>
+                        <td><input type="radio" name="utterance12" value="3"></td>
+                        <td><input type="radio" name="utterance12" value="4"></td>
+                        <td><input type="radio" name="utterance12" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance13 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance13}</td>
+                        <td><input type="radio" name="utterance13" value="1" required></td>
+                        <td><input type="radio" name="utterance13" value="2"></td>
+                        <td><input type="radio" name="utterance13" value="3"></td>
+                        <td><input type="radio" name="utterance13" value="4"></td>
+                        <td><input type="radio" name="utterance13" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance14 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance14}</td>
+                        <td><input type="radio" name="utterance14" value="1" required></td>
+                        <td><input type="radio" name="utterance14" value="2"></td>
+                        <td><input type="radio" name="utterance14" value="3"></td>
+                        <td><input type="radio" name="utterance14" value="4"></td>
+                        <td><input type="radio" name="utterance14" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance15 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance15}</td>
+                        <td><input type="radio" name="utterance15" value="1" required></td>
+                        <td><input type="radio" name="utterance15" value="2"></td>
+                        <td><input type="radio" name="utterance15" value="3"></td>
+                        <td><input type="radio" name="utterance15" value="4"></td>
+                        <td><input type="radio" name="utterance15" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance16 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance16}</td>
+                        <td><input type="radio" name="utterance16" value="1" required></td>
+                        <td><input type="radio" name="utterance16" value="2"></td>
+                        <td><input type="radio" name="utterance16" value="3"></td>
+                        <td><input type="radio" name="utterance16" value="4"></td>
+                        <td><input type="radio" name="utterance16" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance17 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance17}</td>
+                        <td><input type="radio" name="utterance17" value="1" required></td>
+                        <td><input type="radio" name="utterance17" value="2"></td>
+                        <td><input type="radio" name="utterance17" value="3"></td>
+                        <td><input type="radio" name="utterance17" value="4"></td>
+                        <td><input type="radio" name="utterance17" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance18 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance18}</td>
+                        <td><input type="radio" name="utterance18" value="1" required></td>
+                        <td><input type="radio" name="utterance18" value="2"></td>
+                        <td><input type="radio" name="utterance18" value="3"></td>
+                        <td><input type="radio" name="utterance18" value="4"></td>
+                        <td><input type="radio" name="utterance18" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance19 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance19}</td>
+                        <td><input type="radio" name="utterance19" value="1" required></td>
+                        <td><input type="radio" name="utterance19" value="2"></td>
+                        <td><input type="radio" name="utterance19" value="3"></td>
+                        <td><input type="radio" name="utterance19" value="4"></td>
+                        <td><input type="radio" name="utterance19" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance20 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance20}</td>
+                        <td><input type="radio" name="utterance20" value="1" required></td>
+                        <td><input type="radio" name="utterance20" value="2"></td>
+                        <td><input type="radio" name="utterance20" value="3"></td>
+                        <td><input type="radio" name="utterance20" value="4"></td>
+                        <td><input type="radio" name="utterance20" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance21 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance21}</td>
+                        <td><input type="radio" name="utterance21" value="1" required></td>
+                        <td><input type="radio" name="utterance21" value="2"></td>
+                        <td><input type="radio" name="utterance21" value="3"></td>
+                        <td><input type="radio" name="utterance21" value="4"></td>
+                        <td><input type="radio" name="utterance21" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance22 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance22}</td>
+                        <td><input type="radio" name="utterance22" value="1" required></td>
+                        <td><input type="radio" name="utterance22" value="2"></td>
+                        <td><input type="radio" name="utterance22" value="3"></td>
+                        <td><input type="radio" name="utterance22" value="4"></td>
+                        <td><input type="radio" name="utterance22" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance23 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance23}</td>
+                        <td><input type="radio" name="utterance23" value="1" required></td>
+                        <td><input type="radio" name="utterance23" value="2"></td>
+                        <td><input type="radio" name="utterance23" value="3"></td>
+                        <td><input type="radio" name="utterance23" value="4"></td>
+                        <td><input type="radio" name="utterance23" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance24 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance24}</td>
+                        <td><input type="radio" name="utterance24" value="1" required></td>
+                        <td><input type="radio" name="utterance24" value="2"></td>
+                        <td><input type="radio" name="utterance24" value="3"></td>
+                        <td><input type="radio" name="utterance24" value="4"></td>
+                        <td><input type="radio" name="utterance24" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance25 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance25}</td>
+                        <td><input type="radio" name="utterance25" value="1" required></td>
+                        <td><input type="radio" name="utterance25" value="2"></td>
+                        <td><input type="radio" name="utterance25" value="3"></td>
+                        <td><input type="radio" name="utterance25" value="4"></td>
+                        <td><input type="radio" name="utterance25" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance26 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance26}</td>
+                        <td><input type="radio" name="utterance26" value="1" required></td>
+                        <td><input type="radio" name="utterance26" value="2"></td>
+                        <td><input type="radio" name="utterance26" value="3"></td>
+                        <td><input type="radio" name="utterance26" value="4"></td>
+                        <td><input type="radio" name="utterance26" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance27 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance27}</td>
+                        <td><input type="radio" name="utterance27" value="1" required></td>
+                        <td><input type="radio" name="utterance27" value="2"></td>
+                        <td><input type="radio" name="utterance27" value="3"></td>
+                        <td><input type="radio" name="utterance27" value="4"></td>
+                        <td><input type="radio" name="utterance27" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance28 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance28}</td>
+                        <td><input type="radio" name="utterance28" value="1" required></td>
+                        <td><input type="radio" name="utterance28" value="2"></td>
+                        <td><input type="radio" name="utterance28" value="3"></td>
+                        <td><input type="radio" name="utterance28" value="4"></td>
+                        <td><input type="radio" name="utterance28" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance29 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance29}</td>
+                        <td><input type="radio" name="utterance29" value="1" required></td>
+                        <td><input type="radio" name="utterance29" value="2"></td>
+                        <td><input type="radio" name="utterance29" value="3"></td>
+                        <td><input type="radio" name="utterance29" value="4"></td>
+                        <td><input type="radio" name="utterance29" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance30 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance30}</td>
+                        <td><input type="radio" name="utterance30" value="1" required></td>
+                        <td><input type="radio" name="utterance30" value="2"></td>
+                        <td><input type="radio" name="utterance30" value="3"></td>
+                        <td><input type="radio" name="utterance30" value="4"></td>
+                        <td><input type="radio" name="utterance30" value="5"></td>
+                    </tr>
+                    <tr style="display: ${utterance31 ? 'table-row' : 'none'}">
+                        <td class="utterance-cell">${utterance31}</td>
+                        <td><input type="radio" name="utterance31" value="1" required></td>
+                        <td><input type="radio" name="utterance31" value="2"></td>
+                        <td><input type="radio" name="utterance31" value="3"></td>
+                        <td><input type="radio" name="utterance31" value="4"></td>
+                        <td><input type="radio" name="utterance31" value="5"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="submit-container">
+                <button type="submit" class="submit-btn">Submit Annotations</button>
+                <p style="margin-top: 10px; color: #666; font-size: 12px;">
+                    Please ensure all utterances are rated before submitting.
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('annotationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate that all utterances are rated
+            const utteranceCount = document.querySelectorAll('tbody tr').length;
+            let completedCount = 0;
+            
+            for(let i = 1; i <= utteranceCount; i++) {
+                if(document.querySelector(`input[name="utterance${i}"]:checked`)) {
+                    completedCount++;
+                }
+            }
+            
+            if(completedCount < utteranceCount) {
+                alert(`Please rate all utterances. You have completed ${completedCount} out of ${utteranceCount}.`);
+                return;
+            }
+            
+            // Collect responses
+            const responses = {};
+            for(let i = 1; i <= utteranceCount; i++) {
+                const selected = document.querySelector(`input[name="utterance${i}"]:checked`);
+                if(selected) {
+                    responses[`utterance${i}`] = selected.value;
+                }
+            }
+            
+            // In actual MTurk implementation, you would submit this data
+            console.log('Annotation responses:', responses);
+            alert('Thank you! Your annotations have been submitted successfully.');
+        });
+    </script>
+</body>
+</html>
